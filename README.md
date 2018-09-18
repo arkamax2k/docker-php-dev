@@ -4,38 +4,68 @@
 
 This allows you to quickly set up a PHP development environment complete with the following features: 
 
-* Apache
+* Apache 2.4
 * PHP 5.6 through 7.2
 * MariaDB 10.3 or MySQL 8
 * [XDebug](https://xdebug.org/)
 * [MailCatcher](https://mailcatcher.me/)
 * [Selenium](https://www.seleniumhq.org/)
 
-It may be easily repurposed for other web development by altering container definition files. 
+It can be easily repurposed for other languages or frameworks by adding / altering container definition files. 
 
 ## Requirements
 
 * [Docker Engine](https://www.docker.com/get-started) 1.10.0 or higher
 
-## Installation
+## Pre-requisites
 
-1. Install and launch Docker engine
+1. Install and launch Docker Engine
 
-2. Clone this repository into a directory
+2. Confirm that it is running: 
+
+```bash
+$ docker version
+```
+
+```bash
+Client:
+ Version:      18.03.1-ce
+ API version:  1.37
+ Go version:   go1.9.5
+ Git commit:   9ee9f40
+ Built:        Thu Apr 26 07:13:02 2018
+ OS/Arch:      darwin/amd64
+ Experimental: false
+ Orchestrator: swarm
+
+Server:
+ Engine:
+  Version:      18.03.1-ce
+  API version:  1.37 (minimum version 1.12)
+  Go version:   go1.9.5
+  Git commit:   9ee9f40
+  Built:        Thu Apr 26 07:22:38 2018
+  OS/Arch:      linux/amd64
+  Experimental: true
+
+```
 
 ## Usage
 
 ### Basic Usage
 
-Start with default settings: 
+1. Clone this repository into a directory
+ 
+2. Start with default settings 
 
 ```bash
 $ docker/tools/start.sh 
 ```
 
-This will launch a set of containers with default PHP / DB versions as specified in `start.sh` file. 
+This will launch a set of containers with default PHP / DB versions as specified in `start.sh` file. The first
+run may take a while to download images and build containers. Subsequent runs should be significantly faster. 
 
-Then open the included test page: 
+3. Open the included test page: 
 
 [http://localhost:8081/](http://localhost:8081/)
 
@@ -60,11 +90,13 @@ If you need to get to the root command prompt in the web container, do this in a
 $ docker/tools/shell.sh 
 ```
 
-If everything is broken (TM), here is the panic button - it will stop, reset and rebuild all containers:
+If everything is broken, use "The Panic Button" - it will stop, reset and rebuild all containers:
 
 ```bash
 $ docker/tools/start.sh --reset 
 ``` 
+
+##### NOTE: If you have any data in databases inside the DB container, it will be lost when DB container is reset.
 
 ### Development
 
@@ -78,10 +110,11 @@ keep it for further reference.
 
 ### Deployment
 
-When packaging your software for deployment, remove `/env`, `/docker` and any other folders not directly required
-to run your application.  
+When packaging your software for deployment, remove `/env`, `/docker` and any other folders not directly 
+required to run your application.  
 
-As a separate reminder, DO NOT deploy your .git folder to a public web server. Do not be that person.
+As a separate reminder, take care to NOT deploy your .git folder to be publicly served by a web server. 
+Do not be that person.
 
 ### XDebug
 
@@ -147,9 +180,12 @@ e.g. `docker/dockerfiles/Dockerfile.mysql8.db` file allows adding a new DB engin
 
 The above command run MySQL 8. Note that start script saves the most recent DB engine run and should 
 automagically reset the DB Docker container if required. A full container reset is required because different
-DB engines may / will have incompatible DB file formats. 
+DB engines may / will have incompatible DB file formats.   
 
-### Note that a DB engine change WILL result in all databases being erased!  
+### Note that a DB engine change WILL erase all databases managed by the DB container!
+
+If you need to retain your DB data, dump all databases first and reimport the dump into the new DB engine 
+after the switch.  
 
 If the automatic reset fails for any reason and DB fails to start (as evident from the console output when doing
 `start.sh`), do a forced reset:
