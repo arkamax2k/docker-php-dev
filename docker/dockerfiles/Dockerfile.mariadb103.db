@@ -1,0 +1,6 @@
+FROM mariadb:10.3
+
+COPY ./files/db/mysqld-docker.cnf /etc/mysql/conf.d/
+
+ENV TZ=America/Chicago
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone

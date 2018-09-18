@@ -1,0 +1,11 @@
+FROM mysql/mysql-server:8.0
+
+COPY ./files/db/mysqld-docker.cnf /etc/my.cnf.d
+
+RUN echo "!includedir /etc/my.cnf.d" >> /etc/my.cnf
+
+ENV TZ=America/Chicago
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+COPY ./files/db/mysql8/*.cnf /etc/my.cnf.d
+COPY ./files/db/mysql8/*.sql /docker-entrypoint-initdb.d/

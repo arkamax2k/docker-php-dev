@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  db:
+    environment:
+      MYSQL_ROOT_PASSWORD: 'unhackablepassword'
+      MYSQL_DATABASE: 'mysecretdb'
+      MYSQL_USER: 'fredflintstone'
+      MYSQL_PASSWORD: 'dino'

@@ -1,0 +1,54 @@
+FROM php:7.2-apache
+
+RUN apt-get update && apt-get install -y \
+                libfreetype6-dev \
+                libpng-dev \
+                libmcrypt-dev \
+                mysql-client \
+                vim \
+                nano \
+                git \
+                libc-client-dev \
+                libxml2-dev \
+                sudo \
+                wget \
+                ssmtp \
+        && docker-php-ext-install gd iconv pdo pdo_mysql mysqli mbstring zip
+
+RUN pecl install xdebug
+
+RUN echo "alias ll='ls $LS_OPTIONS -l'" >> /root/.bashrc
+
+ENV TZ=America/Chicago
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+COPY ./files/php/*.ini /usr/local/etc/php/conf.d/
+
+ARG DOCKER_HOST_PLATFORM
+
+COPY ./files/php/platform/*-${DOCKER_HOST_PLATFORM}.ini /usr/local/etc/php/conf.d/
+
+COPY ./files/ssmtp/ssmtp.conf /etc/ssmtp/
+
+RUN echo "zend_extension=$(find /usr/local/lib/php/extensions -name 'xdebug.so')" \
+        >> /usr/local/etc/php/conf.d/ext-xdebug.ini
+
+# Install Ioncube loader
+RUN mkdir /ioncube && \
+    cd /ioncube && \
+    wget http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz && \
+    tar xvf ioncube_loaders_lin_x86-64.tar.gz && \
+    cd `php -i | grep extension_dir | cut -d' ' -f 5` && \
+    cp /ioncube/ioncube/ioncube_loader_lin_5.6.so . && \
+    echo zend_extension=ioncube_loader_lin_5.6.so > /usr/local/etc/php/conf.d/ext-ioncube.ini && \
+    rm -rf /ioncube/
+
+COPY ./files/apache/*.conf /etc/apache2/conf-available/
+
+RUN a2enmod rewrite
+
+# RUN a2enmod <another_module>
+
+COPY ./files/docker-web-init.sh /usr/local/bin/
+
+CMD docker-web-init.sh && apache2-foreground

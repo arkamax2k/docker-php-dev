@@ -1,0 +1,53 @@
+version: '2'
+
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: dockerfiles/Dockerfile.php${DOCKER_PHP_VERSION}.web
+      args:
+        - DOCKER_HOST_PLATFORM=${DOCKER_HOST_PLATFORM}
+    container_name: docker_web
+    extra_hosts:
+      - "docker_web:127.0.0.1"
+    volumes:
+      - ../:/var/www/html:cached
+    environment:
+      - DOCKER_HOST_UID
+      - DOCKER_HOST_GID
+    ports:
+      - 8081:80
+
+  db:
+    build:
+      context: ./
+      dockerfile: dockerfiles/Dockerfile.${DOCKER_DB_VERSION}.db
+    container_name: docker_test_db
+    environment:
+      MYSQL_ROOT_PASSWORD: 'testrootpass'
+      MYSQL_DATABASE: 'testdb'
+      MYSQL_USER: 'testuser'
+      MYSQL_PASSWORD: 'testpass'
+
+  selenium:
+    build:
+      context: ./
+      dockerfile: dockerfiles/Dockerfile.selenium
+    container_name: docker_test_selenium
+    volumes:
+          - ../tests/_downloads:/home/seluser/Downloads
+    links:
+      - "web:docker_web"
+    ports:
+      - "45900:5900"
+    logging:
+      driver: "none"
+
+  mailcatcher:
+    build:
+      context: ./
+      dockerfile: dockerfiles/Dockerfile.mail
+    container_name: docker_test_mailcatcher
+    ports:
+      - 1025:1025
+      - 1080:1080
