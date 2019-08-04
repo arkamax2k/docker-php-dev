@@ -4,7 +4,7 @@
 
 DOCKER_DIR=$(dirname $(cd $(dirname $BASH_SOURCE) && pwd))
 
-DOCKER_PHP_VERSION="70"
+DOCKER_PHP_VERSION="73"
 DOCKER_DB_VERSION="mariadb103"
 
 while [ "$1" != "" ]; do

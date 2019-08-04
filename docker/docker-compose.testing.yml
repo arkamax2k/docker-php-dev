@@ -29,6 +29,20 @@ services:
       MYSQL_USER: 'testuser'
       MYSQL_PASSWORD: 'testpass'
 
+  selenium:
+    build:
+      context: ./
+      dockerfile: dockerfiles/Dockerfile.selenium
+    container_name: docker_test_selenium
+    volumes:
+          - ../tests/_downloads:/home/seluser/Downloads
+    links:
+      - "web:docker_web"
+    ports:
+      - "45900:5900"
+    logging:
+      driver: "none"
+
   mailcatcher:
     build:
       context: ./
