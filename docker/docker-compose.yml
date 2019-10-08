@@ -16,7 +16,7 @@ services:
       - DOCKER_HOST_UID
       - DOCKER_HOST_GID
     ports:
-      - 9999:80
+      - 8081:80
 
   db:
     build:
