@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y \
                 libfreetype6-dev \
                 libpng-dev \
                 libmcrypt-dev \
-                mariadb-client \
+                mysql-client \
                 vim \
                 nano \
                 git \
@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
                 libxml2-dev \
                 sudo \
                 wget \
-                msmtp \
+                ssmtp \
         && docker-php-ext-install gd iconv mcrypt pdo pdo_mysql mysql mysqli mbstring zip
 
 RUN pecl install xdebug-2.5.5
@@ -28,7 +28,7 @@ ARG DOCKER_HOST_PLATFORM
 
 COPY ./files/php/platform/*-${DOCKER_HOST_PLATFORM}.ini /usr/local/etc/php/conf.d/
 
-COPY ./files/msmtp/msmtp.conf /etc/msmtp/
+COPY ./files/ssmtp/ssmtp.conf /etc/ssmtp/
 
 RUN echo "zend_extension=$(find /usr/local/lib/php/extensions -name 'xdebug.so')" \
         >> /usr/local/etc/php/conf.d/ext-xdebug.ini
