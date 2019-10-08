@@ -80,7 +80,7 @@ Click here to send a test email
 ```
 
 Click the link provided to send a test email to be intercepted by a local instance of MailCatcher. Mail is 
-processed by msmtp - you can reconfigure it to mail to an external SMTP server instead, if desired.
+processed by ssmtp - you can reconfigure it to mail to an external SMTP server instead, if desired.
 
 To stop containers, just press Ctrl-C in the terminal.
 
