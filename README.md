@@ -5,7 +5,7 @@
 This allows you to quickly set up a PHP development environment complete with the following features: 
 
 * Apache 2.4
-* PHP 5.6 through 7.2
+* PHP 5.6 through 8.2
 * MariaDB 10.3 or MySQL 8
 * [XDebug](https://xdebug.org/)
 * [MailCatcher](https://mailcatcher.me/)
@@ -72,9 +72,9 @@ run may take a while to download images and build containers. Subsequent runs sh
 Click "Check Environment" to confirm PHP / DB versions: 
 
 ```
-PHP version: 7.0.31
+PHP version: 8.2.11
 
-DB version: 10.3.9-MariaDB-1:10.3.9+maria~bionic
+DB version: 10.3.39-MariaDB-1:10.3.39+maria~ubu2004
 
 Click here to send a test email
 ```
@@ -123,7 +123,7 @@ enabled by default but can be disabled if required - edit `docker/files/php/ext-
 `xdebug.remote_enable` setting to `0`, then restart the environment with `--build` option:
 
 ```bash
-$ docker/tools/shell.sh --build 
+$ docker/tools/start.sh --build 
 ```
 
 ### MailCatcher
@@ -152,19 +152,19 @@ Retrieve message with `id` of 1:
 Use command line flags to alter the PHP version you want to use: 
 
 ```bash
-$ docker/tools/start.sh --php 72
+$ docker/tools/start.sh --php 82
 ```
 
-Available PHP versions are `56`, `70`, `71` and `72`. Adding new ones should be as easy as duplicating e.g.
+Available PHP versions are `56`, `70`, `71`, `72`, `73`, `80`, `81` and `82`. Adding new ones should be as easy as duplicating e.g.
 `docker/dockerfiles/Dockerfile.php72.web` file, renaming it accordingly and changing the first line to reflect
 the desired PHP version. 
 
-The above command will run PHP 7.2. Note that start script saves the most recent version of PHP run and should 
+The above command will run PHP 8.2. Note that start script saves the most recent version of PHP run and should 
 automagically rebuild the web Docker container on PHP version change. If this fails for any reason and you are
 stuck on a previous PHP version, do a forced rebuild:
 
 ```bash
-$ docker/tools/start.sh --php 72 --build
+$ docker/tools/start.sh --php 82 --build
 ```
 
 ### Using a different DB engine
